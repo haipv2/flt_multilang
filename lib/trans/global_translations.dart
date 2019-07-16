@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -45,7 +46,7 @@ class GlobalTrans {
 
         //check if we found the requested key
         if (value is String && index == lastIndex) {
-          string == value;
+          string = value;
 
           // add to cache
           _cache[key] = string;
@@ -102,6 +103,7 @@ class GlobalTrans {
     //load the language strings
     String jsonContent = await rootBundle
         .loadString('assets/locale/locale_${_locale.languageCode}.json');
+    _localizedValues = json.decode(jsonContent);
 
     //clear cache
     _cache = {};
