@@ -1,1 +1,1 @@
-//enum Languages {'en','vi'};
+enum ViewState {loading,ready}
