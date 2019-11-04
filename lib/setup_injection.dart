@@ -7,4 +7,5 @@ GetIt locator = GetIt.instance;
 
 void setupLocator(){
 //    locator.registerLazySingleton(() => LanguageService());
+
 }

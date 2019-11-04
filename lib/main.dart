@@ -38,7 +38,7 @@ class MainPage extends StatelessWidget {
 
     return Scaffold(
       body: ChangeNotifierProvider<LanguageModel>(
-        builder: (_) => Languages,
+        builder: (_) => LanguageModel(),
         child: Center(
           child: Column(
             children: <Widget>[
@@ -55,6 +55,7 @@ class MainPage extends StatelessWidget {
   }
 
   void changeLang() {
+
   }
 }
 
