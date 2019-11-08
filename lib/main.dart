@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -14,20 +16,25 @@ void main() async {
 class Application extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'new app',
-      theme: ThemeData(primarySwatch: Colors.red),
-      localizationsDelegates: [
-        const TranslationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
-      ],
-      supportedLocales: [
-        const Locale('en', ''),
-        const Locale('vi', ''),
-      ],
-      home: MainPage(),
+    return StreamProvider <Locale>(
+      builder: (context) {
+        return StreamController<Locale>();
+      } ,
+      child: MaterialApp(
+        title: 'new app',
+        theme: ThemeData(primarySwatch: Colors.red),
+        localizationsDelegates: [
+          const TranslationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en', ''),
+          const Locale('vi', ''),
+        ],
+        home: MainPage(),
+      ),
     );
   }
 }
@@ -36,9 +43,10 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Locale myLocale = Localizations.localeOf(context);
+    var abc = Provider.of<Locale>(context);
     return Scaffold(
       body: ChangeNotifierProvider<LanguageModel>(
-        builder: (_) => LanguageModel(),
+        builder: (_) => abc,
         child: Center(
           child: FirstPage(),
         ),
