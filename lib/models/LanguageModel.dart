@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flt_multilanguage/common/app_const.dart';
+import 'package:flt_multilanguage/service/languages_service.dart';
 
+import '../setup_injection.dart';
 import 'BaseModel.dart';
 import '../repos/shared_preference_app.dart';
 
@@ -15,18 +17,16 @@ class LanguageModel extends BaseModel {
   LanguageModel({this.languagesCode});
 
   void changeLanguage() async {
+    LanguageService languageService = locator<LanguageService>();
+    setState(ViewState.loading);
     String lang = await preferencesUtil.getAppSavedInfo('lang');
     if (lang == "vi") {
       lang = 'en';
-      await preferencesUtil.setApplicationSavedInfo('lang', 'en');
+      languageService.setLang('en');
+    } else {
+      languageService.setLang('vi');
     }
-    setState(ViewState.ready);
-  }
-
-  StreamController<Locale> localController = StreamController<Locale>();
-  Future<bool> changeLocale(String langCode) {
-    setState(ViewState.loading);
-    localController.add(Locale(langCode));
+//    Future.delayed(Duration(milliseconds: 3000));
     setState(ViewState.ready);
   }
 

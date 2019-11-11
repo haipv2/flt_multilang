@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'common/app_const.dart';
 import 'models/LanguageModel.dart';
 import 'service/languages_service.dart';
 import 'repos/shared_preference_app.dart';
+import 'setup_injection.dart';
 
 void main() async {
+  setupLocator();
   preferencesUtil.setApplicationSavedInfo('lang', 'en');
   runApp(Application());
 }
@@ -16,10 +19,11 @@ void main() async {
 class Application extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider <Locale>(
+    return StreamProvider<Locale>(
       builder: (context) {
-        return StreamController<Locale>();
-      } ,
+//        return locator<LanguageService>().localeController;
+        return locator<LanguageService>().localeController.stream;
+      },
       child: MaterialApp(
         title: 'new app',
         theme: ThemeData(primarySwatch: Colors.red),
@@ -46,14 +50,13 @@ class MainPage extends StatelessWidget {
     var abc = Provider.of<Locale>(context);
     return Scaffold(
       body: ChangeNotifierProvider<LanguageModel>(
-        builder: (_) => abc,
+        builder: (_) => LanguageModel(),
         child: Center(
           child: FirstPage(),
         ),
       ),
     );
   }
-
 }
 
 class FirstPage extends StatefulWidget {
@@ -63,24 +66,29 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   LanguageModel languageModel;
+
   @override
   Widget build(BuildContext context) {
     languageModel = Provider.of<LanguageModel>(context);
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(Translations.of(context).text('hello')),
-          RaisedButton(
-            child: Text((Translations.of(context).text('change'))),
-            onPressed: changeLang,
+    return languageModel.state != ViewState.ready
+        ? Center(
+            child: CircularProgressIndicator(),
           )
-        ],
-      ),
-    );
+        : Container(
+            child: Column(
+              children: <Widget>[
+                Text(LanguageService.of(context).text('hello')),
+                RaisedButton(
+                  child: Text((LanguageService.of(context).text('change'))),
+                  onPressed: changeLang,
+                )
+              ],
+            ),
+          );
   }
 
-
   void changeLang() {
+//    languageModel.changeLanguage();
     languageModel.changeLanguage();
   }
 }
